@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	db, err := database.Database{}
+	db, err :=
 	db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
 	defer db.Close()
 }
