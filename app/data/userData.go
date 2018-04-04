@@ -3,13 +3,13 @@ package data
 import (
 	"errors"
 	"fmt"
-
-	"github.com/navisot/movierama/app"
+	"github.com/navisot/movierama/models"
+	"github.com/navisot/movierama/app/helpers"
 )
 
-func (s *Storage) User(id int) (*app.User, error) {
+func (s *Storage) User(id int) (*models.User, error) {
 
-	u := new(app.User)
+	u := new(models.User)
 
 	fmt.Println(s)
 
@@ -25,9 +25,9 @@ func (s *Storage) User(id int) (*app.User, error) {
 	return u, nil
 }
 
-func (s *Storage) LoginUser(email, password string) (*app.User, error) {
+func (s *Storage) LoginUser(email, password string) (*models.User, error) {
 
-	u := new(app.User)
+	u := new(models.User)
 
 	pwd := helpers.HashPassword(email, password)
 
@@ -41,7 +41,7 @@ func (s *Storage) LoginUser(email, password string) (*app.User, error) {
 	return u, nil
 }
 
-func (s *Storage) RegisterUser(u *app.User) error {
+func (s *Storage) RegisterUser(u *models.User) error {
 
 	fmt.Println(u.Email)
 	fmt.Println(u.Password)
