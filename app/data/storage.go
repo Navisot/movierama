@@ -1,6 +1,6 @@
 package data
 
-import "github.com/navisot/movierama/app/config"
+import "github.com/navisot/movierama/app"
 
 type Storage struct {
 	*config.Database
