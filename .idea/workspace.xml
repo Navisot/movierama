@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f3ddc8a1-079c-433a-99ed-d2f581fc9493" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/models/models.go" afterPath="$PROJECT_DIR$/models/models.go" />
+      <change beforePath="$PROJECT_DIR$/database/db.go" afterPath="$PROJECT_DIR$/database/database.go" />
+      <change beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="db.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/database/db.go">
+      <file leaf-file-name="database.go" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/database/database.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
-              <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+              <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
               <folding>
                 <element signature="e#18#77#0" expanded="true" />
               </folding>
@@ -45,13 +46,13 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.go" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="5" column="31" lean-forward="false" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="31" />
+            <state relative-caret-position="168">
+              <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
               <folding>
-                <element signature="e#14#45#0" expanded="true" />
+                <element signature="e#14#70#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -75,10 +76,10 @@
       <list>
         <option value="$PROJECT_DIR$/database/database.go" />
         <option value="$PROJECT_DIR$/models/database.go" />
-        <option value="$PROJECT_DIR$/main.go" />
         <option value="$PROJECT_DIR$/app/bootstrap.go" />
         <option value="$PROJECT_DIR$/database/db.go" />
         <option value="$PROJECT_DIR$/models/models.go" />
+        <option value="$PROJECT_DIR$/main.go" />
       </list>
     </option>
   </component>
@@ -117,6 +118,11 @@
             <path>
               <item name="project" type="b2602c69:ProjectViewProjectNode" />
               <item name="project" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="project" type="b2602c69:ProjectViewProjectNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+              <item name="database" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -179,24 +185,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/models/models.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/database/db.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="10" column="0" lean-forward="true" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding>
-            <element signature="e#18#77#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/bootstrap.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="42">
@@ -205,12 +193,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
+    <entry file="file://$PROJECT_DIR$/models/models.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
-          <caret line="5" column="31" lean-forward="false" selection-start-line="5" selection-start-column="26" selection-end-line="5" selection-end-column="31" />
+          <caret line="5" column="4" lean-forward="false" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="168">
+          <caret line="8" column="33" lean-forward="false" selection-start-line="8" selection-start-column="33" selection-end-line="8" selection-end-column="33" />
           <folding>
-            <element signature="e#14#45#0" expanded="true" />
+            <element signature="e#14#70#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/database/database.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding>
+            <element signature="e#18#77#0" expanded="true" />
           </folding>
         </state>
       </provider>
