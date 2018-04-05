@@ -6,21 +6,24 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/navisot/movierama/app/handlers"
 	"net/http"
+
+	"github.com/navisot/movierama/app/database"
+	"github.com/jinzhu/gorm"
 )
 
 func main() {
 
-	db, err := config.GetDatabaseInstance()
+	database.DB, database.Err = gorm.Open("postgres", "user=go_user password=go_password database=go_database sslmode=disable")
 
-	if err != nil {
-		fmt.Println(err.Error())
+	if database.Err != nil {
+		fmt.Println(database.Err.Error())
 	} else {
-		config.StartMigration(db)
+		config.StartMigration()
 	}
 
 	router := mux.NewRouter()
 
 	router.HandleFunc("/user/register/{username}/{email}/{password}", handlers.NewUserRegistration).Methods("POST")
 
-	http.ListenAndServe(":8082", router)
+	http.ListenAndServe(":8084", router)
 }
