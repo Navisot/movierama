@@ -5,11 +5,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-type Database struct {
-	DB *gorm.DB
-}
-
-func GetDatabaseInstance() (*Database, error) {
+func GetDatabaseInstance() (*gorm.DB, error) {
 
 	db, err := gorm.Open("postgres", "user=go_user password=go_password database=go_database sslmode=disable")
 
@@ -17,5 +13,5 @@ func GetDatabaseInstance() (*Database, error) {
 		return nil, err
 	}
 
-	return &Database{db}, nil
+	return db, nil
 }

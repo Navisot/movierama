@@ -2,10 +2,11 @@ package config
 
 import (
 	"github.com/navisot/movierama/app/models"
+	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
 
-func StartMigration(db *Database) {
+func StartMigration(db *gorm.DB) {
 
 	var allModels = make(map[string]interface{})
 	allModels["User"] = &models.User{}
@@ -13,8 +14,8 @@ func StartMigration(db *Database) {
 	allModels["Movie"] = &models.Movie{}
 
 	for _, table := range allModels {
-		db.DB.DropTableIfExists(table)
-		db.DB.AutoMigrate(table)
+		db.DropTableIfExists(table)
+		db.AutoMigrate(table)
 	}
 
 
