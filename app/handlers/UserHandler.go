@@ -9,7 +9,6 @@ import (
 	"fmt"
 )
 
-
 func NewUserRegistration(w http.ResponseWriter, req *http.Request){
 
 	params := mux.Vars(req)
