@@ -1,0 +1,172 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>MovieRama - {{ .Title }}</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{.BasePath}}static/app.css">
+</head>
+<body>
+<div id="app">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <h2>MovieRama</h2>
+            </div>
+            <div class="col-sm">
+                {{ if .LoggedIn }}
+                <!-- User View -->
+                <span class="float-right">Hello {{ .Username }}, <a href="{{.BasePath}}user/logout">Logout</a></span>
+                        {{ else }}
+                <!-- Guest View -->
+                <span class="float-right">
+                    <a href="#" data-toggle="modal" data-target="#loginModal">Log in</a>
+                    or
+                    <button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#signupModal">
+                   Sign Up
+                </button>
+                </span>
+                        {{ end }}
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm">
+                <div class="sortBar">Sort By: <a href="#" v-on:click.prevent="showMoviesOrderBy('likes')">Likes</a> | <a href="#" v-on:click.prevent="showMoviesOrderBy('hates')">Hates</a> | <a href="#" v-on:click.prevent="showMoviesOrderBy('date')">Date</a></div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-sm-9">
+                <div v-for="(item,index) in movies"class="movieDescription">
+                    <h2>{(item.movie_title)}</h2>
+                    <small>Posted By <a href="#" v-on:click.prevent="showUserMovies(item.user_id)">{(item.username)}</a> 3 days ago</small>
+                    <div class="marginDiv description">
+                        {(item.movie_description)}
+                    </div>
+                    <div class="marginDiv">
+
+                        <!--Not Interested-->
+                        <span v-if="item.user_like == 0">
+                           <a href="#" v-on:click.prevent="likeThisMovie()">{(item.movie_likes)} likes</a> |
+                           <a href="#" v-on:click.prevent="hateThisMovie()">{(item.movie_hates)} hates</a>
+                        </span>
+
+                        <!-- Like Movie -->
+                        <span v-if="item.user_like == 1">
+                            <a href="#" v-on:click.prevent="hateThisMovie()">{(item.movie_likes)} likes</a> |
+                            <span>{(item.movie_hates)} hates</span>
+
+                        </span>
+
+                        <!-- Hate Movie -->
+                        <span v-if="item.user_like == 2">
+                            <a href="#" v-on:click.prevent="likeThisMovie()">{(item.movie_likes)} likes</a> |
+                            <span>{(item.movie_hates)} hates</span>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-3">
+                <button style="border-radius: 40px" type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#newMovieModal">
+                    New Movie
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- New Movie Modal -->
+    <div class="modal fade" id="newMovieModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Movie</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMovie" class="form">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" v-model="movie.title" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Description:</label>
+                            <input type="text" v-model="movie.description" class="form-control">
+                        </div>
+                        <button v-on:click.prevent="saveMovie" class="btn btn-xs btn-primary">Save Movie</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Log In</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form" action="{{ .BasePath}}user/login" method="post">
+                        <div class="form-group">
+                            <label for="name">Email:</label>
+                            <input type="text" name="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Password:</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+                        <input type="submit" class="btn btn-primary btn-xs" value="Login">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Sign Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="form" action="{{ .BasePath}}user/register" method="post">
+                        <div class="form-group">
+                            <label for="name">Email:</label>
+                            <input type="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Username:</label>
+                            <input type="text" name="username" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="name">Password:</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                        <input type="submit" class="btn btn-primary btn-xs" value="Create Account">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="{{ .BasePath }}static/app.js"></script>
+</html>

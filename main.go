@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/navisot/movierama/app/config"
-	"github.com/gorilla/mux"
-	"github.com/navisot/movierama/app/handlers"
 	"net/http"
-
 	"github.com/navisot/movierama/app/database"
 	"github.com/jinzhu/gorm"
+	"fmt"
+	"github.com/navisot/movierama/app"
 )
 
 func main() {
@@ -21,9 +19,7 @@ func main() {
 		config.StartMigration()
 	}
 
-	router := mux.NewRouter()
+	router := app.NewRouter()
 
-	router.HandleFunc("/user/register/{username}/{email}/{password}", handlers.NewUserRegistration).Methods("POST")
-
-	http.ListenAndServe(":8084", router)
+	http.ListenAndServe(":8024", router)
 }

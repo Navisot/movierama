@@ -1,0 +1,21 @@
+.sortBar{
+    background-color: gainsboro;
+    border:2px solid black;
+    padding: 4px;
+}
+
+.marginDiv{
+    margin-top:12px;
+}
+
+.description {
+    font-style: italic;
+}
+
+.movieDescription {
+    border:2px solid black;
+    border-radius: 2px;
+    padding:8px;
+    word-wrap: break-word;
+    margin-bottom: 20px;
+}

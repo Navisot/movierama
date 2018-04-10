@@ -1,29 +1,117 @@
 package handlers
 
 import (
-	"net/http"
-	"github.com/gorilla/mux"
 	"encoding/json"
-	"github.com/navisot/movierama/app/models"
-	"github.com/navisot/movierama/app/controllers"
 	"fmt"
+	"html/template"
+	"log"
+	"net/http"
+	"os"
+
+	"github.com/navisot/movierama/app/config"
+	"github.com/navisot/movierama/app/controllers"
+	"github.com/navisot/movierama/app/helpers"
+	"github.com/navisot/movierama/app/models"
 )
 
-func NewUserRegistration(w http.ResponseWriter, req *http.Request){
+func WebNewUserRegistration(w http.ResponseWriter, r *http.Request) {
 
-	params := mux.Vars(req)
-	var NewUser = models.User{}
-	json.NewDecoder(req.Body).Decode(&NewUser)
-	NewUser.Username = params["username"]
-	NewUser.Email = params["email"]
-	NewUser.Password = params["password"]
-	u,err := controllers.RegisterUser(&NewUser)
+	username := r.FormValue("username")
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+
+	validRecord := UserValidation(email, password, username)
+
+	if validRecord == false {
+		http.Redirect(w, r, "/user/register", 302)
+		return
+	}
+
+	us := models.User{
+		Username: username,
+		Email:    email,
+		Password: helpers.HashAndSalt([]byte(password)),
+	}
+
+	_, err := controllers.RegisterUser(&us)
 
 	if err != nil {
 		fmt.Println("ERROR")
 	}
 
-	json.NewEncoder(w).Encode(u)
+	http.Redirect(w, r, "/", 302)
 
+}
 
+func GetAllUsers(w http.ResponseWriter, req *http.Request) {
+
+	users, err := controllers.GetAllUsers()
+
+	if err != nil {
+		log.Println(err)
+	}
+
+	json.NewEncoder(w).Encode(&users)
+}
+
+func HomePageTemplate(w http.ResponseWriter, r *http.Request) {
+	cwd, _ := os.Getwd()
+	p := controllers.HomePageView{Title: "HomePage", BasePath: "http://localhost:8024/"}
+	t, _ := template.ParseFiles(cwd + "/app/templates/base.html")
+	t.Execute(w, p)
+}
+
+func NewUserRegistrationForm(w http.ResponseWriter, r *http.Request) {
+	cwd, _ := os.Getwd()
+	p := controllers.RegisterFormView{Title: "Register User", BasePath: "http://localhost:8024/"}
+	t, _ := template.ParseFiles(cwd + "/app/templates/register.html")
+	t.Execute(w, p)
+}
+
+func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
+	cwd, _ := os.Getwd()
+	p := controllers.LoginFormView{Title: "User Login", BasePath: "http://localhost:8024/"}
+	t, _ := template.ParseFiles(cwd + "/app/templates/login.html")
+	t.Execute(w, p)
+}
+
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	email := r.FormValue("email")
+	password := r.FormValue("password")
+	redirectTarget := "/"
+
+	if helpers.ValidEmail(email) == false {
+		http.Redirect(w, r, "/user/login", 302)
+		return
+	}
+
+	findUser := controllers.UserLogin(email, password)
+
+	if findUser {
+		config.SetSession(email, w)
+		redirectTarget = "/"
+	}
+	http.Redirect(w, r, redirectTarget, 302)
+}
+
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	config.ClearSession(w)
+	http.Redirect(w, r, "/", 302)
+}
+
+func UserValidation(email, password, username string) bool {
+
+	password_length := len(password)
+
+	valid_email := helpers.ValidEmail(email)
+
+	exists := controllers.EmailOrUsernameExists(email, username)
+
+	correctPassword := helpers.Between2Numbers(password_length, 5, 15)
+
+	if exists == true || correctPassword == false || valid_email == false {
+		return false
+	}
+
+	return true
 }
