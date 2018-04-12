@@ -2,6 +2,7 @@ const vm = new Vue({
     delimiters: ['{(', ')}'],
     el: '#app',
     data: {
+        isLoggedIn: false,
         isGallery: false,
         movies:[],
         movie:{
@@ -30,12 +31,33 @@ const vm = new Vue({
         showUserMovies(user_id) {
             vm.isGallery = true;
             // show movies where user_id = user_id
+        },
+        likeThisMovie(movie_id) {
+            if (vm.isLoggedIn) {
+                axios.post('/api/rate/movie/'+movie_id+'/1').then(response => {
+                    console.log(response.data)
+                });
+            } else {
+                alert('Please login in order to like or hate a movie!')
+            }
 
+        },
+        hateThisMovie(movie_id) {
+            if (vm.isLoggedIn) {
+                axios.post('/api/rate/movie/'+movie_id+'/2').then(response => {
+                    console.log(response.data)
+                });
+            } else {
+                alert('Please login in order to like or hate a movie!')
+            }
         }
     },
     mounted: function(){
         axios.get("/api/show/movies").then(response => {
             this.movies = response.data;
+        });
+        axios.get("/api/user/status").then(response => {
+            this.isLoggedIn = response.data.is_logged_in;
         });
     }
 });

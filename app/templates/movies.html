@@ -47,20 +47,19 @@
 
                         <!--Not Interested-->
                         <span v-if="item.user_like == 0">
-                           <a href="#" v-on:click.prevent="likeThisMovie()">{(item.movie_likes)} likes</a> |
-                           <a href="#" v-on:click.prevent="hateThisMovie()">{(item.movie_hates)} hates</a>
+                           <a href="#" v-on:click.prevent="likeThisMovie(item.movie_id)">{(item.movie_likes)} likes</a> |
+                           <a href="#" v-on:click.prevent="hateThisMovie(item.movie_id)">{(item.movie_hates)} hates</a>
                         </span>
 
                         <!-- Like Movie -->
                         <span v-if="item.user_like == 1">
-                            <a href="#" v-on:click.prevent="hateThisMovie()">{(item.movie_likes)} likes</a> |
-                            <span>{(item.movie_hates)} hates</span>
-
+                            <span>{(item.movie_likes)}</span> |
+                            <a href="#" v-on:click.prevent="hateThisMovie(item.movie_id)">{(item.movie_hates)} hates</a>
                         </span>
 
                         <!-- Hate Movie -->
                         <span v-if="item.user_like == 2">
-                            <a href="#" v-on:click.prevent="likeThisMovie()">{(item.movie_likes)} likes</a> |
+                            <a href="#" v-on:click.prevent="likeThisMovie(item.movie_id)">{(item.movie_likes)} likes</a> |
                             <span>{(item.movie_hates)} hates</span>
 
                         </span>

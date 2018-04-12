@@ -54,6 +54,26 @@ func GetAllUsers(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(&users)
 }
 
+type UserStatus struct {
+	IsLogged bool `json:"is_logged_in"`
+}
+
+func GetUserStatus(w http.ResponseWriter, req *http.Request) {
+
+	logged_in := false
+
+	email := config.CheckSessionEmail(req)
+
+	if email != "" {
+		logged_in = true
+	}
+
+	response := UserStatus{}
+	response.IsLogged = logged_in
+
+	json.NewEncoder(w).Encode(&response)
+}
+
 func HomePageTemplate(w http.ResponseWriter, r *http.Request) {
 	cwd, _ := os.Getwd()
 	p := controllers.HomePageView{Title: "HomePage", BasePath: "http://localhost:8024/"}

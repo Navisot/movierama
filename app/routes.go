@@ -29,11 +29,27 @@ var routes = Routes{
 		nil,
 	},
 	Route{
+		"Rate Movie",
+		"POST",
+		"/api/rate/movie/{movie_id}/{vote}",
+		"WEB",
+		handlers.RateMovie,
+		[]mux.MiddlewareFunc{middlewares.CustomMiddlewareHandler{}.AuthenticateMiddleware},
+	},
+	Route{
 		"Get All Users",
 		"GET",
 		"/api/show/users",
 		"API",
 		handlers.GetAllUsers,
+		nil,
+	},
+	Route{
+		"Get User Status",
+		"GET",
+		"/api/user/status",
+		"API",
+		handlers.GetUserStatus,
 		nil,
 	},
 	Route{
@@ -82,7 +98,7 @@ var routes = Routes{
 		"/user/logout",
 		"WEB",
 		handlers.LogoutHandler,
-		nil,
+		[]mux.MiddlewareFunc{middlewares.CustomMiddlewareHandler{}.AuthenticateMiddleware},
 	},
 	Route{
 		"User Registration Form",
