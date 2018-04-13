@@ -2,6 +2,8 @@ const vm = new Vue({
     delimiters: ['{(', ')}'],
     el: '#app',
     data: {
+        selectedUser: '',
+        selectedUserID: 0,
         isLoggedIn: false,
         isGallery: false,
         movies:[],
@@ -23,33 +25,56 @@ const vm = new Vue({
                }
             });
         },
-        showMoviesOrderBy(item) {
-            axios.get("/api/show/movies/sort/"+item).then(response => {
-                this.movies = response.data;
-            });
+        showMoviesOrderBy(item, movie_user_id) {
+                axios.get("/api/show/movies/sort/" + item + '/' + movie_user_id).then(response => {
+                    vm.movies = response.data.Movies;
+                    vm.selectedUserID = response.data.SpecificUserID;
+                    vm.selectedUser = response.data.SelectedUser;
+                });
         },
-        showUserMovies(user_id) {
-            vm.isGallery = true;
-            // show movies where user_id = user_id
-        },
-        likeThisMovie(movie_id) {
+        likeThisMovie(movie_id, index) {
             if (vm.isLoggedIn) {
                 axios.post('/api/rate/movie/'+movie_id+'/1').then(response => {
-                    console.log(response.data)
+                   vm.movies.splice(index, 1,  response.data);
                 });
             } else {
                 alert('Please login in order to like or hate a movie!')
             }
 
         },
-        hateThisMovie(movie_id) {
+        hateThisMovie(movie_id, index) {
             if (vm.isLoggedIn) {
                 axios.post('/api/rate/movie/'+movie_id+'/2').then(response => {
-                    console.log(response.data)
+                    vm.movies.splice(index, 1,  response.data);
                 });
             } else {
                 alert('Please login in order to like or hate a movie!')
             }
+        },
+        unlikeThisMovie(movie_id, index) {
+            if (vm.isLoggedIn) {
+                axios.post('/api/unlike/movie/'+movie_id).then(response => {
+                    vm.movies.splice(index, 1,  response.data);
+                });
+            } else {
+                alert('Please login in order to like or hate a movie!')
+            }
+        },
+        unhateThisMovie(movie_id, index) {
+            if (vm.isLoggedIn) {
+                axios.post('/api/unhate/movie/'+movie_id).then(response => {
+                    vm.movies.splice(index, 1,  response.data);
+                });
+            } else {
+                alert('Please login in order to like or hate a movie!')
+            }
+        },
+        clearFilter(){
+            axios.get("/api/show/movies").then(response => {
+                this.movies = response.data;
+                this.selectedUser = '';
+                this.selectedUserID = 0;
+            });
         }
     },
     mounted: function(){

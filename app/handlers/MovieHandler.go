@@ -2,10 +2,14 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
+
+	"github.com/navisot/movierama/app/database"
 
 	"github.com/gorilla/mux"
 
@@ -70,11 +74,21 @@ func GetAllMovies(w http.ResponseWriter, req *http.Request) {
 	json.NewEncoder(w).Encode(&movies)
 }
 
+type MoviesAPIResponse struct {
+	Movies         []models.MovieResult
+	SpecificUserID int
+	SelectedUser   string
+}
+
 func GetAllMoviesSorted(w http.ResponseWriter, req *http.Request) {
+
+	response := MoviesAPIResponse{}
 
 	p := mux.Vars(req)
 
 	item := p["item"]
+
+	userID, _ := strconv.Atoi(p["user_id"])
 
 	isLoggedIn := false
 
@@ -85,13 +99,26 @@ func GetAllMoviesSorted(w http.ResponseWriter, req *http.Request) {
 		isLoggedIn = true
 	}
 
-	movies, err := controllers.GetAllMoviesSorted(item, isLoggedIn, email)
+	movies, searchForUser, err := controllers.GetAllMoviesSorted(item, isLoggedIn, email, userID)
+
+	fmt.Println(searchForUser)
 
 	if err != nil {
 		log.Println(err)
 	}
 
-	json.NewEncoder(w).Encode(&movies)
+	if searchForUser {
+		u := models.User{}
+		database.DB.Where("user_id = ?", userID).First(&u)
+		response.Movies = movies
+		response.SpecificUserID = userID
+		response.SelectedUser = u.Username
+	} else {
+		response.Movies = movies
+		response.SpecificUserID = 0
+	}
+
+	json.NewEncoder(w).Encode(&response)
 }
 
 func GetAllMoviesTemplate(w http.ResponseWriter, r *http.Request) {

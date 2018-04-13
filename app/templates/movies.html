@@ -31,46 +31,52 @@
         <br>
         <div class="row">
             <div class="col-sm">
-                <div class="sortBar">Sort By: <a href="#" v-on:click.prevent="showMoviesOrderBy('likes')">Likes</a> | <a href="#" v-on:click.prevent="showMoviesOrderBy('hates')">Hates</a> | <a href="#" v-on:click.prevent="showMoviesOrderBy('date')">Date</a></div>
+                <div class="sortBar">Sort By: <a href="#" v-on:click.prevent="showMoviesOrderBy('likes', selectedUserID)">Likes</a> | <a href="#" v-on:click.prevent="showMoviesOrderBy('hates', selectedUserID)">Hates</a> | <a href="#" v-on:click.prevent="showMoviesOrderBy('date', selectedUserID)">Date</a><span class="float-right" v-if="selectedUserID != 0">Movies From User: {(selectedUser)} | <a href="#" v-on:click.prevent="clearFilter">Clear</a></span></div>
             </div>
         </div>
         <br>
         <div class="row">
             <div class="col-sm-9">
-                <div v-for="(item,index) in movies"class="movieDescription">
+                <div v-for="(item,index) in movies" class="movieDescription">
                     <h2>{(item.movie_title)}</h2>
-                    <small>Posted By <a href="#" v-on:click.prevent="showUserMovies(item.user_id)">{(item.username)}</a> 3 days ago</small>
+                    <small>Posted By <a href="#" v-on:click.prevent="showMoviesOrderBy('user', item.user_id)">{(item.username)}</a> {(item.movie_date)}</small>
                     <div class="marginDiv description">
                         {(item.movie_description)}
                     </div>
                     <div class="marginDiv">
-
                         <!--Not Interested-->
                         <span v-if="item.user_like == 0">
-                           <a href="#" v-on:click.prevent="likeThisMovie(item.movie_id)">{(item.movie_likes)} likes</a> |
-                           <a href="#" v-on:click.prevent="hateThisMovie(item.movie_id)">{(item.movie_hates)} hates</a>
+                           <a href="#" v-on:click.prevent="likeThisMovie(item.movie_id, index)">{(item.movie_likes)} likes</a> |
+                           <a href="#" v-on:click.prevent="hateThisMovie(item.movie_id, index)">{(item.movie_hates)} hates</a>
                         </span>
 
                         <!-- Like Movie -->
                         <span v-if="item.user_like == 1">
-                            <span>{(item.movie_likes)}</span> |
-                            <a href="#" v-on:click.prevent="hateThisMovie(item.movie_id)">{(item.movie_hates)} hates</a>
+                            <span>{(item.movie_likes)} likes</span> |
+                            <a href="#" v-on:click.prevent="hateThisMovie(item.movie_id, index)">{(item.movie_hates)} hates</a>
                         </span>
 
                         <!-- Hate Movie -->
                         <span v-if="item.user_like == 2">
-                            <a href="#" v-on:click.prevent="likeThisMovie(item.movie_id)">{(item.movie_likes)} likes</a> |
+                            <a href="#" v-on:click.prevent="likeThisMovie(item.movie_id, index)">{(item.movie_likes)} likes</a> |
                             <span>{(item.movie_hates)} hates</span>
 
                         </span>
+                        <div class="float-right">
+                            <span v-if="item.user_like == 1">You like this movie | <a href="#" v-on:click.prevent="unlikeThisMovie(item.movie_id, index)">Unlike</a> </span>
+                            <span v-else-if="item.user_like == 2">You hate this movie | <a href="#" v-on:click.prevent="unhateThisMovie(item.movie_id, index)">Unhate</a> </span>
+                            <span v-else></span>
+                        </div>
                     </div>
                 </div>
             </div>
+        {{ if .LoggedIn }}
             <div class="col-sm-3">
                 <button style="border-radius: 40px" type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#newMovieModal">
                     New Movie
                 </button>
             </div>
+        {{ end }}
         </div>
     </div>
 
