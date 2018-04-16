@@ -33,13 +33,10 @@ func GetAllMovies(isLoggedIn bool, email string) ([]models.MovieResult, error) {
 			fmt.Println("ERROR")
 		}
 
-		fmt.Println(&result)
-
 	} else {
 
 		database.DB.Raw("select u.user_id as user_id, mv.movie_id as movie_id,u.username as username,u.email as user_email,mv.title as movie_title,mv.description as movie_description,mv.publication_date as movie_date, (select count(r.vote) from ratings r where r.movie_id = mv.movie_id and r.vote = 1) as movie_likes,(select count(r.vote) from ratings r where r.movie_id = mv.movie_id and r.vote = 2) as movie_hates from users u inner join movies mv on mv.user_id = u.user_id GROUP BY u.user_id, mv.movie_id").Scan(&result)
 
-		fmt.Println(&result)
 	}
 	return result, nil
 

@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/navisot/movierama/app/database"
 
@@ -25,6 +25,8 @@ type MovieResponse struct {
 
 func SaveNewMovie(w http.ResponseWriter, req *http.Request) {
 
+	var Response MovieResponse
+
 	email := req.Context().Value("email").(string)
 
 	userID := controllers.GetUserIDByEmail(email)
@@ -33,15 +35,23 @@ func SaveNewMovie(w http.ResponseWriter, req *http.Request) {
 
 	err := json.NewDecoder(req.Body).Decode(&movie)
 
+	// Check If Movie Has Description N Title
+	if movie.Title == "" || movie.Description == "" {
+		Response.Status = "VALIDATOR_ERROR"
+		Response.Code = 200
+		json.NewEncoder(w).Encode(&Response)
+		return
+	}
+
 	if err != nil {
 		panic(err)
 	}
 
+	// Save Movie
 	movie.UserID = userID
+	movie.PublicationDate = time.Now()
 
 	_, err = controllers.SaveMovie(&movie)
-
-	var Response MovieResponse
 
 	if err != nil {
 		panic(err)
@@ -100,8 +110,6 @@ func GetAllMoviesSorted(w http.ResponseWriter, req *http.Request) {
 	}
 
 	movies, searchForUser, err := controllers.GetAllMoviesSorted(item, isLoggedIn, email, userID)
-
-	fmt.Println(searchForUser)
 
 	if err != nil {
 		log.Println(err)

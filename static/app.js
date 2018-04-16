@@ -19,9 +19,11 @@ const vm = new Vue({
                if (response.data.status == "OK"){
                    that.movie.title = '';
                    that.movie.description = '';
-                    alert('Success!')
+                    alert('Success!');
+                    location.reload();
+
                } else {
-                   alert ('Fail');
+                   alert("Please Fill in The Title and Description fields");
                }
             });
         },
