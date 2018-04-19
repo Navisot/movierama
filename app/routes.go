@@ -34,13 +34,6 @@ var routes = Routes{
 		[]mux.MiddlewareFunc{middlewares.CustomMiddlewareHandler{}.AuthenticateMiddleware},
 	},
 	Route{
-		"Get All Users",
-		"GET",
-		"/api/show/users",
-		handlers.GetAllUsers,
-		nil,
-	},
-	Route{
 		"Get User Status",
 		"GET",
 		"/api/user/status",
@@ -90,14 +83,14 @@ var routes = Routes{
 		[]mux.MiddlewareFunc{middlewares.CustomMiddlewareHandler{}.AuthenticateMiddleware},
 	},
 	Route{
-		"User Registration Form",
+		"GET User Registration Form",
 		"GET",
 		"/user/register",
 		handlers.NewUserRegistrationForm,
 		nil,
 	},
 	Route{
-		"User Registration WEB",
+		"POST User Registration",
 		"POST",
 		"/user/register",
 		handlers.WebNewUserRegistration,

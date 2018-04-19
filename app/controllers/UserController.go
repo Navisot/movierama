@@ -19,16 +19,6 @@ func RegisterUser(u *models.User) (*models.User, error) {
 	return u, nil
 }
 
-func GetAllUsers() (*[]models.User, error) {
-
-	users := []models.User{}
-
-	database.DB.Find(&users)
-
-	return &users, nil
-
-}
-
 func UserLogin(email, password string) bool {
 
 	user := models.User{}

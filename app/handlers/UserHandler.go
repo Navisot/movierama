@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"os"
 
@@ -43,17 +42,6 @@ func WebNewUserRegistration(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func GetAllUsers(w http.ResponseWriter, req *http.Request) {
-
-	users, err := controllers.GetAllUsers()
-
-	if err != nil {
-		log.Println(err)
-	}
-
-	json.NewEncoder(w).Encode(&users)
-}
-
 type UserStatus struct {
 	IsLogged bool `json:"is_logged_in"`
 }
@@ -76,21 +64,21 @@ func GetUserStatus(w http.ResponseWriter, req *http.Request) {
 
 func HomePageTemplate(w http.ResponseWriter, r *http.Request) {
 	cwd, _ := os.Getwd()
-	p := controllers.HomePageView{Title: "HomePage", BasePath: "http://localhost:8024/"}
+	p := controllers.HomePageView{Title: "HomePage", BasePath: config.GetVariable{}.BasePathValue()}
 	t, _ := template.ParseFiles(cwd + "/app/templates/base.html")
 	t.Execute(w, p)
 }
 
 func NewUserRegistrationForm(w http.ResponseWriter, r *http.Request) {
 	cwd, _ := os.Getwd()
-	p := controllers.RegisterFormView{Title: "Register User", BasePath: "http://localhost:8024/"}
+	p := controllers.RegisterFormView{Title: "Register User", BasePath: config.GetVariable{}.BasePathValue()}
 	t, _ := template.ParseFiles(cwd + "/app/templates/register.html")
 	t.Execute(w, p)
 }
 
 func LoginFormHandler(w http.ResponseWriter, r *http.Request) {
 	cwd, _ := os.Getwd()
-	p := controllers.LoginFormView{Title: "User Login", BasePath: "http://localhost:8024/"}
+	p := controllers.LoginFormView{Title: "User Login", BasePath: config.GetVariable{}.BasePathValue()}
 	t, _ := template.ParseFiles(cwd + "/app/templates/login.html")
 	t.Execute(w, p)
 }

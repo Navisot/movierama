@@ -143,7 +143,7 @@ func GetAllMoviesTemplate(w http.ResponseWriter, r *http.Request) {
 	cwd, _ := os.Getwd()
 	p := controllers.MoviesTemplate{
 		Title:    "HomePage",
-		BasePath: "http://localhost:8024/",
+		BasePath: config.GetVariable{}.BasePathValue(),
 		LoggedIn: is_logged_in,
 		Username: username,
 	}
